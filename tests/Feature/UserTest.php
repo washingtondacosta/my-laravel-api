@@ -36,30 +36,18 @@ class UserTest extends TestCase
 		]);
 	}
 
-	public function testUserLogin()
-	{
-		$name = $this->faker->name();
-		$email = $this->faker->email();
+	public function test_login(){
 
-		$user = new User([
-			'name' => $name,
-			'email' => $email,
-			'password' => bcrypt($this->password)
-		]);        
-		
-		$user->save();     
-		
-		$response = $this->postJson('/api/auth/login', [
-			'email' => $email,
-			'password' => $this->password
-		]);
-
-		
-		$response->assertRedirect('/login');
+        $user = User::factory()->create();
+        $response = $this->from('/login')->post('/login', [
+            'email' => $user->email,
+            'password' => $user->password
+        ]);
+        $response->assertRedirect('/login');
         $response->assertSessionHasErrors('email');
         $this->assertTrue(session()->hasOldInput('email'));
         $this->assertFalse(session()->hasOldInput('password'));
         $this->assertGuest();
-	}
+    }
 	
 }
