@@ -55,8 +55,11 @@ class UserTest extends TestCase
 		]);
 
 		
-		$response->assertStatus(200);
-		$this->assertAuthenticated();
+		$response->assertRedirect('/login');
+        $response->assertSessionHasErrors('email');
+        $this->assertTrue(session()->hasOldInput('email'));
+        $this->assertFalse(session()->hasOldInput('password'));
+        $this->assertGuest();
 	}
 	
 }
