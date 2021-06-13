@@ -3,13 +3,6 @@
 # Check https://circleci.com/docs/2.0/language-php/ for more details
 #
 version: 2
-
-name: EESDevOps
-
-on:
-  push:
-    branches: [master]
-
 jobs:
   build:
     docker:
