@@ -2,7 +2,16 @@
 #
 # Check https://circleci.com/docs/2.0/language-php/ for more details
 #
+<<<<<<< HEAD
 version: 2
+=======
+name: EESDevOps
+
+on:
+  push:
+    branches: [master]
+
+>>>>>>> 48ebb83fce3a000998721e570cf16d70a207d518
 jobs:
   build:
     docker:
