@@ -3,6 +3,13 @@
 # Check https://circleci.com/docs/2.0/language-php/ for more details
 #
 version: 2
+
+name: EESDevOps
+
+on:
+  push:
+    branches: [master]
+
 jobs:
   build:
     docker:
@@ -43,7 +50,7 @@ jobs:
             php artisan key:generate
 
       - run:
-          name: "Criar banco de dados and subir migrações"
+          name: "Criar banco de dados e subir migrações"
           command: |
             touch database/database.sqlite
             php artisan migrate --env=testing
