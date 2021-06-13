@@ -13,7 +13,7 @@ jobs:
       - checkout
 
       - run:
-          name: "Prepare Environment"
+          name: "Preparando o ambiente"
           command: |
             sudo apt update
             sudo docker-php-ext-install zip
@@ -27,7 +27,7 @@ jobs:
             - v1-dependencies-
 
       - run:
-          name: "Install Dependencies"
+          name: "Instalando Dependências"
           command: composer install -n --prefer-dist
 
       - save_cache:
@@ -37,19 +37,19 @@ jobs:
 
       # prepare the database
       - run:
-          name: "Create Environment file and generate app key"
+          name: "Criar arquivo de ambiente e gerar app key"
           command: |
             mv .env.testing .env
             php artisan key:generate
 
       - run:
-          name: "Create database and run migration"
+          name: "Criar banco de dados and subir migrações"
           command: |
             touch database/database.sqlite
             php artisan migrate --env=testing
 
       - run:
-          name: "Generate Passport encryption keys"
+          name: "Gerar Passport encryption keys"
           command: php artisan passport:install
 
       # run tests with phpunit
