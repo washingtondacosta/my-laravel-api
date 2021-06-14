@@ -3,12 +3,13 @@
 # Check https://circleci.com/docs/2.0/language-php/ for more details
 #
 
+# Versão do arquivo de configuração CircleCI
 version: 2
 
 jobs:
   build:
     docker:
-      # Specify the version you desire here
+      # Versão do ambiente php utilizado
       - image: circleci/php:7.4-node-browsers
 
     steps:
@@ -20,41 +21,44 @@ jobs:
             sudo apt update
             sudo docker-php-ext-install zip
 
-      # Download and cache dependencies
+      # Download e cache das dependências
       - restore_cache:
           keys:
-            # "composer.lock" can be used if it is committed to the repo
             - v1-dependencies-{{ checksum "composer.json" }}
-            # fallback to using the latest cache if no exact match is found
+            # fallback para usar o cache mais recente se nenhuma correspondência exata for encontrada
             - v1-dependencies-
 
       - run:
+        # Instalação das dependências
           name: "Instalando Dependências"
           command: composer install -n --prefer-dist
 
       - save_cache:
+        # Salvar dependencias em cache
           key: v1-dependencies-{{ checksum "composer.json" }}
           paths:
             - ./vendor
 
-      # prepare the database
+      # Preparação dos arquivos de configuração e geração da chave de aplicativo
       - run:
           name: "Criar arquivo de ambiente e gerar app key"
           command: |
             mv .env.testing .env
             php artisan key:generate
-
+      
+      # Criação do sqlite a ser usado como banco de dados e criação das tabelas no banco
       - run:
           name: "Criar banco de dados e subir migrações"
           command: |
             touch database/database.sqlite
             php artisan migrate --env=testing
-
+      
+      #Geração de chavadas encriptadas para uso da API
       - run:
           name: "Gerar Passport encryption keys"
           command: php artisan passport:install
 
-      # run tests with phpunit
+      # Executar testes com o phpunit
       - run:
           name: "Run Tests"
           command: ./vendor/bin/phpunit
